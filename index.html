@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Материалы к Уроку Stitch + Claude Code | Мастодонт</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;
+  --bg2:#12121a;
+  --bg3:#1a1a28;
+  --text:#e8e8f0;
+  --text2:#9898b0;
+  --accent1:#7c3aed;
+  --accent2:#06b6d4;
+  --accent3:#a855f7;
+  --gradient:linear-gradient(135deg,var(--accent1),var(--accent2));
+  --gradient2:linear-gradient(135deg,var(--accent3),var(--accent2));
+  --card-border:#2a2a3e;
+  --card-bg:#14141f;
+  --radius:16px;
+  --radius-sm:10px;
+  --max-w:900px;
+}
+html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--accent1) var(--bg)}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--gradient);border-radius:4px}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.7;
+  overflow-x:hidden;
+  position:relative;
+}
+body::before{
+  content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+  background:radial-gradient(ellipse 600px 600px at 20% 20%,rgba(124,58,237,.08),transparent),
+              radial-gradient(ellipse 500px 500px at 80% 80%,rgba(6,182,212,.06),transparent);
+  pointer-events:none;z-index:0;
+}
+body::after{
+  content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+  opacity:.025;pointer-events:none;z-index:9999;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,10,15,.85);backdrop-filter:blur(20px);
+  border-bottom:2px solid transparent;
+  border-image:linear-gradient(90deg,transparent,var(--accent1),var(--accent2),transparent) 1;
+  padding:0 24px;
+}
+.nav-inner{
+  max-width:var(--max-w);margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:60px;gap:16px;
+}
+.nav-brand{font-family:'Unbounded',sans-serif;font-weight:700;font-size:clamp(14px,2vw,18px);letter-spacing:2px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-links{display:flex;gap:8px;flex-wrap:wrap;}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:13px;font-weight:500;padding:6px 14px;border-radius:8px;transition:.2s;white-space:nowrap}
+.nav-links a:hover{color:var(--text);background:var(--bg3)}
+.hero{
+  max-width:var(--max-w);margin:0 auto;padding:80px 24px 60px;text-align:center;position:relative;z-index:1;
+}
+.hero-badge{
+  display:inline-block;font-family:'Unbounded',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;color:var(--accent2);
+  border:1px solid rgba(6,182,212,.3);padding:8px 20px;border-radius:40px;margin-bottom:28px;
+  background:rgba(6,182,212,.05);
+}
+.hero h1{
+  font-family:'Unbounded',sans-serif;font-size:clamp(28px,5vw,48px);font-weight:800;
+  line-height:1.2;margin-bottom:20px;
+  background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero p{color:var(--text2);font-size:clamp(15px,2vw,18px);max-width:600px;margin:0 auto 32px}
+.hero-video-link{
+  display:inline-flex;align-items:center;gap:12px;
+  background:var(--bg2);border:1px solid var(--card-border);
+  padding:14px 24px;border-radius:var(--radius-sm);
+  color:var(--text);text-decoration:none;font-size:14px;transition:.3s;
+}
+.hero-video-link:hover{border-color:var(--accent1);box-shadow:0 0 20px rgba(124,58,237,.15)}
+.hero-video-link svg{width:20px;height:20px;fill:var(--accent2);flex-shrink:0}
+.section{max-width:var(--max-w);margin:0 auto;padding:0 24px 60px;position:relative;z-index:1}
+.section-title{
+  font-family:'Unbounded',sans-serif;font-size:clamp(18px,3vw,24px);font-weight:700;margin-bottom:32px;
+  display:flex;align-items:center;gap:12px;
+}
+.learn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.learn-card{
+  background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);
+  padding:24px;position:relative;overflow:hidden;transition:.3s;
+}
+.learn-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient)}
+.learn-card:hover{border-color:var(--accent1);transform:translateY(-2px)}
+.learn-card .icon{font-size:28px;margin-bottom:12px;display:block}
+.learn-card p{color:var(--text2);font-size:14px;line-height:1.6}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.tool-card{
+  background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-sm);
+  padding:18px 20px;display:flex;align-items:center;gap:14px;transition:.3s;
+}
+.tool-card:hover{border-color:var(--accent2)}
+.tool-icon{font-size:24px;flex-shrink:0}
+.tool-info{flex:1;min-width:0}
+.tool-name{font-weight:600;font-size:14px;margin-bottom:2px}
+.tool-name a{color:var(--text);text-decoration:none;border-bottom:1px dashed var(--text2);transition:.2s}
+.tool-name a:hover{color:var(--accent2);border-color:var(--accent2)}
+.tool-desc{color:var(--text2);font-size:12px}
+.tool-badge{
+  font-size:10px;font-weight:600;padding:4px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0;
+  background:rgba(6,182,212,.1);color:var(--accent2);border:1px solid rgba(6,182,212,.2);
+}
+.step-card{
+  background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);
+  padding:clamp(24px,4vw,40px);margin-bottom:24px;position:relative;overflow:hidden;
+  transition:.3s;
+}
+.step-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient)}
+.step-card::after{
+  content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;
+  background:radial-gradient(circle,rgba(124,58,237,.06),transparent);pointer-events:none;
+}
+.step-card:hover{border-color:rgba(124,58,237,.3)}
+.step-num{
+  font-family:'Unbounded',sans-serif;font-size:clamp(36px,6vw,56px);font-weight:800;
+  background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  opacity:.25;position:absolute;top:16px;right:24px;line-height:1;
+}
+.step-title{font-family:'Unbounded',sans-serif;font-size:clamp(16px,2.5vw,20px);font-weight:700;margin-bottom:14px;padding-right:60px}
+.step-desc{color:var(--text2);font-size:14px;margin-bottom:20px;line-height:1.7}
+.step-actions{margin-bottom:20px}
+.step-action{
+  display:flex;align-items:flex-start;gap:10px;padding:6px 0;font-size:14px;color:var(--text);
+}
+.step-action::before{content:'▸';color:var(--accent2);font-weight:700;flex-shrink:0;margin-top:1px}
+.step-settings{
+  background:var(--bg3);border:1px solid var(--card-border);border-radius:var(--radius-sm);
+  padding:14px 18px;font-size:13px;color:var(--text2);margin-bottom:16px;
+}
+.step-settings strong{color:var(--text)}
+.step-tip{
+  display:flex;align-items:flex-start;gap:10px;
+  background:rgba(6,182,212,.05);border:1px solid rgba(6,182,212,.1);
+  border-radius:var(--radius-sm);padding:14px 18px;font-size:13px;color:var(--text2);margin-top:14px;
+}
+.step-tip::before{content:'💡';flex-shrink:0;font-size:16px}
+.prompt-block{
+  background:var(--bg);border:1px solid var(--card-border);border-radius:var(--radius-sm);
+  margin:16px 0;overflow:hidden;position:relative;
+  border-left:3px solid transparent;border-image:linear-gradient(to bottom,var(--accent1),var(--accent2)) 1;
+  box-shadow:0 0 30px rgba(124,58,237,.05);
+}
+.prompt-label{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 18px;background:rgba(124,58,237,.05);border-bottom:1px solid var(--card-border);
+  font-size:13px;font-weight:600;color:var(--accent3);
+}
+.prompt-copy{
+  background:var(--bg3);border:1px solid var(--card-border);color:var(--text2);
+  padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500;
+  transition:.2s;font-family:'Inter',sans-serif;
+}
+.prompt-copy:hover{background:var(--accent1);color:#fff;border-color:var(--accent1)}
+.prompt-copy.copied{background:rgba(6,182,212,.2);color:var(--accent2);border-color:var(--accent2)}
+.prompt-text{
+  padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:13px;
+  line-height:1.7;white-space:pre-wrap;word-break:break-word;color:var(--text);
+}
+.cmd-block{
+  background:var(--bg);border:1px solid var(--card-border);border-radius:var(--radius-sm);
+  margin:16px 0;overflow:hidden;
+}
+.cmd-label{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 18px;background:rgba(6,182,212,.05);border-bottom:1px solid var(--card-border);
+  font-size:13px;font-weight:600;color:var(--accent2);
+}
+.cmd-text{
+  padding:14px 18px;font-family:'JetBrains Mono',monospace;font-size:13px;
+  line-height:1.6;white-space:pre-wrap;word-break:break-word;
+}
+.links-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.link-card{
+  display:flex;align-items:center;gap:14px;
+  background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-sm);
+  padding:16px 20px;transition:.3s;text-decoration:none;
+}
+.link-card:hover{border-color:var(--accent2);transform:translateY(-1px)}
+.link-icon{font-size:22px;flex-shrink:0}
+.link-info{flex:1;min-width:0}
+.link-name{font-weight:600;font-size:14px;color:var(--text);margin-bottom:2px}
+.link-url{font-size:11px;color:var(--text2);word-break:break-all}
+.cta-section{max-width:var(--max-w);margin:0 auto;padding:0 24px 60px;position:relative;z-index:1}
+.cta-card{
+  background:var(--bg2);border:1px solid var(--card-border);border-radius:var(--radius);
+  padding:48px clamp(24px,8vw,100px);
+  display:flex;align-items:center;justify-content:space-between;gap:32px;
+  animation:ctaGlow 3s ease-in-out infinite;
+}
+@keyframes ctaGlow{
+  0%,100%{box-shadow:0 0 30px rgba(124,58,237,.08)}
+  50%{box-shadow:0 0 50px rgba(124,58,237,.15),0 0 80px rgba(6,182,212,.08)}
+}
+.cta-text{font-family:'Unbounded',sans-serif;font-size:clamp(16px,2.5vw,22px);font-weight:700;line-height:1.4}
+.cta-text span{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cta-btn{
+  display:inline-block;background:var(--gradient);color:#fff;text-decoration:none;
+  font-family:'Unbounded',sans-serif;font-size:14px;font-weight:600;
+  padding:18px 40px;border-radius:var(--radius-sm);white-space:nowrap;transition:.3s;
+}
+.cta-btn:hover{transform:scale(1.03);box-shadow:0 8px 30px rgba(124,58,237,.3)}
+.footer{
+  max-width:var(--max-w);margin:0 auto;padding:40px 24px;text-align:center;
+  border-top:1px solid var(--card-border);position:relative;z-index:1;
+}
+.footer-brand{font-family:'Unbounded',sans-serif;font-weight:700;font-size:16px;letter-spacing:2px;margin-bottom:6px;
+  background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.footer-sub{color:var(--text2);font-size:13px;margin-bottom:14px}
+.footer-yt{
+  display:inline-flex;align-items:center;gap:8px;color:var(--text2);font-size:13px;
+  cursor:pointer;padding:8px 16px;border-radius:8px;transition:.2s;border:1px solid transparent;
+  background:none;font-family:'Inter',sans-serif;
+}
+.footer-yt:hover{color:var(--text);border-color:var(--card-border);background:var(--bg2)}
+.footer-yt svg{width:18px;height:18px;fill:currentColor}
+.divider{
+  max-width:var(--max-w);margin:0 auto 60px;padding:0 24px;
+  height:1px;background:linear-gradient(90deg,transparent,var(--card-border),transparent);
+  position:relative;z-index:1;
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .cta-card{flex-direction:column;text-align:center;padding:36px 24px}
+  .step-num{font-size:28px;top:10px;right:14px;opacity:.15}
+  .step-title{padding-right:40px;font-size:15px}
+  .step-desc{font-size:13px}
+  .step-action{font-size:13px;gap:8px}
+  .step-action strong{display:block;margin-bottom:2px}
+  .prompt-label{flex-wrap:wrap;gap:8px;padding:10px 14px}
+  .prompt-label span{font-size:12px}
+  .prompt-text{padding:12px 14px;font-size:12px;line-height:1.6}
+  .prompt-copy{padding:5px 10px;font-size:11px}
+  .cmd-label{flex-wrap:wrap;gap:8px;padding:8px 14px}
+  .learn-grid{grid-template-columns:1fr}
+  .links-grid{grid-template-columns:1fr}
+  .hero h1{font-size:24px}
+  .hero-badge{font-size:10px;letter-spacing:2px;padding:6px 14px}
+  .section-title{font-size:17px}
+  .step-settings{font-size:12px;padding:10px 14px}
+  .step-tip{font-size:12px;padding:10px 14px}
+}
+@media(max-width:480px){
+  .hero{padding:50px 14px 36px}
+  .section{padding:0 14px 40px}
+  .step-card{padding:16px}
+  .tools-grid{grid-template-columns:1fr}
+  .tool-card{flex-wrap:wrap;gap:10px;padding:14px}
+  .tool-badge{margin-left:auto}
+  .hero-video-link{font-size:13px;padding:12px 18px}
+  .cta-text{font-size:15px}
+  .cta-btn{padding:14px 28px;font-size:13px}
+  .nav-inner{height:50px}
+  .nav-brand{font-size:13px}
+}
+@media(min-width:2560px){
+  :root{--max-w:1000px}
+  body{font-size:17px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+<div class="nav-inner">
+<div class="nav-brand">МАСТОДОНТ</div>
+<div class="nav-links">
+<a href="#tools">Инструменты</a>
+<a href="#steps">Шаги</a>
+<a href="#links">Ссылки</a>
+</div>
+</div>
+</nav>
+
+<section class="hero">
+<div class="hero-badge">МАТЕРИАЛЫ К УРОКУ</div>
+<h1>Stitch + Claude Code - сайты за 10 минут</h1>
+<p>Связываем ИИ-дизайнер от Google с Claude Code через MCP и штампуем красивые сайты текстом</p>
+<a href="https://youtu.be/DuAJh0VUSH0" target="_blank" class="hero-video-link">
+<svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.9 31.9 0 0 0 0 12a31.9 31.9 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.9 31.9 0 0 0 24 12a31.9 31.9 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12z"/></svg>
+Смотреть видео на YouTube
+</a>
+</section>
+
+<div class="divider"></div>
+
+<section class="section">
+<div class="section-title">📋 Что ты научишься делать</div>
+<div class="learn-grid">
+<div class="learn-card"><span class="icon">🎨</span><p>Генерировать идеи и дизайн-стратегии в Stitch с помощью Gemini 3.1 Pro</p></div>
+<div class="learn-card"><span class="icon">🖼️</span><p>Создавать визуальные концепты через NanoBanana 2 и Redesign</p></div>
+<div class="learn-card"><span class="icon">🔗</span><p>Подключать Stitch к Claude Code через MCP в AntiGravity</p></div>
+<div class="learn-card"><span class="icon">📐</span><p>Извлекать design.md и штамповать страницы в едином стиле</p></div>
+<div class="learn-card"><span class="icon">🚀</span><p>Деплоить готовый сайт на GitHub + Vercel прямо из чата</p></div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section class="section" id="tools">
+<div class="section-title">🛠️ Что понадобится</div>
+<div class="tools-grid">
+<div class="tool-card">
+<span class="tool-icon">✨</span>
+<div class="tool-info"><div class="tool-name"><a href="https://stitch.withgoogle.com" target="_blank">Stitch</a></div><div class="tool-desc">ИИ-дизайнер от Google</div></div>
+<span class="tool-badge">15 редизайнов/день</span>
+</div>
+<div class="tool-card">
+<span class="tool-icon">🚀</span>
+<div class="tool-info"><div class="tool-name"><a href="https://antigravity.google/" target="_blank">AntiGravity</a></div><div class="tool-desc">IDE с встроенным Claude Code</div></div>
+<span class="tool-badge">бесплатно</span>
+</div>
+<div class="tool-card">
+<span class="tool-icon">🐙</span>
+<div class="tool-info"><div class="tool-name"><a href="https://github.com" target="_blank">GitHub</a></div><div class="tool-desc">Хранение кода + деплой</div></div>
+<span class="tool-badge">бесплатно</span>
+</div>
+<div class="tool-card">
+<span class="tool-icon">▲</span>
+<div class="tool-info"><div class="tool-name"><a href="https://vercel.com" target="_blank">Vercel</a></div><div class="tool-desc">Хостинг и деплой</div></div>
+<span class="tool-badge">бесплатно</span>
+</div>
+<div class="tool-card">
+<span class="tool-icon">🔑</span>
+<div class="tool-info"><div class="tool-name"><a href="https://stitch.withgoogle.com/settings" target="_blank">Stitch API ключ</a></div><div class="tool-desc">Настройки Stitch</div></div>
+<span class="tool-badge">нужен для MCP</span>
+</div>
+<div class="tool-card">
+<span class="tool-icon">🔑</span>
+<div class="tool-info"><div class="tool-name"><a href="https://vercel.com/account/settings/tokens" target="_blank">Vercel API Token</a></div><div class="tool-desc">Настройки Vercel</div></div>
+<span class="tool-badge">нужен для деплоя</span>
+</div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section class="section" id="steps">
+<div class="section-title">📌 Пошаговая инструкция</div>
+
+<div class="step-card">
+<div class="step-num">01</div>
+<div class="step-title">Генерация идей в Stitch</div>
+<div class="step-desc">Открой Stitch и выбери функцию "Ideation". Stitch уходит думать и возвращается с тремя полноценными дизайн-стратегиями - типографика, интерактивные элементы, спецификации.</div>
+<div class="step-actions">
+<div class="step-action">Открой <a href="https://stitch.withgoogle.com" target="_blank" style="color:var(--accent2)">stitch.withgoogle.com</a></div>
+<div class="step-action">Нажми "Ideation" (Генерация идеи)</div>
+<div class="step-action">Введи промпт и нажми Generate</div>
+</div>
+<div class="prompt-block">
+<div class="prompt-label"><span>💬 Промпт 1 - Генерация идей</span><button class="prompt-copy" onclick="copyPrompt(this)">Скопировать</button></div>
+<div class="prompt-text">Я запускаю свой продукт. Проведи исследование рынка. Найди три крутых компании и предложи мне три дизайна для страницы тарифы.</div>
+</div>
+</div>
+
+<div class="step-card">
+<div class="step-num">02</div>
+<div class="step-title">Выбор стратегий и генерация визуалов</div>
+<div class="step-desc">Stitch покажет три дизайн-стратегии с архитектурой и спецификацией. Выбери понравившиеся и попроси сгенерировать визуалы. Подожди пару минут - он отрисует три варианта.</div>
+<div class="step-actions">
+<div class="step-action">Просмотри три стратегии</div>
+<div class="step-action">Напиши "Мне нравятся все три"</div>
+<div class="step-action">Скажи "Давай, делай визуал, все круто"</div>
+<div class="step-action">Дождись генерации (1-2 минуты)</div>
+</div>
+<div class="prompt-block">
+<div class="prompt-label"><span>💬 Промпт 2 - Утверждение</span><button class="prompt-copy" onclick="copyPrompt(this)">Скопировать</button></div>
+<div class="prompt-text">Мне нравятся все три. Давай, делай визуал, все круто.</div>
+</div>
+</div>
+
+<div class="step-card">
+<div class="step-num">03</div>
+<div class="step-title">Динамическое редактирование</div>
+<div class="step-desc">Получив визуалы, редактируй их прямо на холсте - меняй текст, добавляй элементы, давай задачи по отдельным блокам. Можно запускать несколько задач одновременно.</div>
+<div class="step-actions">
+<div class="step-action">Нажми E на элементе - меняй текст прямо в интерфейсе</div>
+<div class="step-action">Выдели блок через "Аннотацию" - дай задачу текстом</div>
+<div class="step-action">Запускай несколько правок параллельно</div>
+</div>
+<div class="prompt-block">
+<div class="prompt-label"><span>💬 Пример - Добавление элемента</span><button class="prompt-copy" onclick="copyPrompt(this)">Скопировать</button></div>
+<div class="prompt-text">Добавь иконку ракетки</div>
+</div>
+<div class="prompt-block">
+<div class="prompt-label"><span>💬 Пример - Изменение стиля</span><button class="prompt-copy" onclick="copyPrompt(this)">Скопировать</button></div>
+<div class="prompt-text">Сделай кнопку больше с эффектом фиолетовой тени</div>
+</div>
+<div class="step-tip">Кнопка "Прототип" - запускает живой прототип, который можно листать и проверять как на телефоне</div>
+<div class="step-tip">Кнопка "Predictive Heatmap" - показывает, куда будет ложиться глаз пользователя</div>
+</div>
+
+<div class="step-card">
+<div class="step-num">04</div>
+<div class="step-title">Генерация полного сайта через NanoBanana 2</div>
+<div class="step-desc">Выбери понравившийся стиль и попроси Stitch сгенерировать весь сайт. Переключись на Gemini 3.1 Pro. NanoBanana 2 генерирует визуальный концепт-арт (картинку), а не код - по этой картинке потом Claude Code напишет чистый код.</div>
+<div class="step-actions">
+<div class="step-action">Выбери стиль-фаворит</div>
+<div class="step-action">Переключи модель на Gemini 3.1 Pro</div>
+<div class="step-action">Введи промпт</div>
+</div>
+<div class="prompt-block">
+<div class="prompt-label"><span>💬 Промпт 3 - Генерация сайта</span><button class="prompt-copy" onclick="copyPrompt(this)">Скопировать</button></div>
+<div class="prompt-text">Сгенерируй весь основной сайт в таком стиле</div>
+</div>
+<div class="step-settings"><strong>⚙️ Модель:</strong> Gemini 3.1 Pro (NanoBanana 2 встроена именно в неё)</div>
+</div>
+
+<div class="step-card">
+<div class="step-num">05</div>
+<div class="step-title">Редизайн по референсу (NanoBanana 2)</div>
+<div class="step-desc">Нашёл красивый сайт? Можно взять его стиль и переосмыслить через Stitch. Нажми "Redesign", вставь URL или скриншот сайта-референса.</div>
+<div class="step-actions">
+<div class="step-action">Найди красивый сайт-референс (Dribbble, Awwwards и т.д.)</div>
+<div class="step-action">Нажми кнопку "Redesign" в Stitch</div>
+<div class="step-action">Вставь URL или скриншот</div>
+<div class="step-action">Введи промпт</div>
+<div class="step-action">Переключи результат на десктоп или мобильную версию</div>
+</div>
+<div class="prompt-block">
+<div class="prompt-label"><span>💬 Промпт 4 - Редизайн</span><button class="prompt-copy" onclick="copyPrompt(this)">Скопировать</button></div>
+<div class="prompt-text">Я хочу, чтобы ты сделал полный редизайн моего сайта на основе этого стиля. Сохрани этот красивый хеддер, добавь блог с отзывами, логотип партнеров, секцию FAQ и в самом низу сделай интерфейс чата и призыв к действию</div>
+</div>
+<div class="step-tip">NanoBanana 2 генерирует концепт-арт (картинку), не код. Это визуальный образ, который передает настроение будущего продукта.</div>
+</div>
+
+<div class="step-card">
+<div class="step-num">06</div>
+<div class="step-title">Подключение Stitch MCP в AntiGravity</div>
+<div class="step-desc">Связываем Stitch с Claude Code, чтобы он мог читать наши дизайны и превращать их в код.</div>
+<div class="step-actions">
+<div class="step-action"><strong>Способ 1 (AntiGravity):</strong> Меню → MCP сервера → напиши "Stitch" → Install</div>
+<div class="step-action">Перейди на <a href="https://stitch.withgoogle.com/settings" target="_blank" style="color:var(--accent2)">stitch.withgoogle.com/settings</a> → скопируй API ключ</div>
+<div class="step-action">Вставь ключ в AntiGravity</div>
+<div class="step-action">Проверь: Manage MCP Server → обнови → должно появиться 8 функций</div>
+</div>
+<div class="step-actions" style="margin-top:16px">
+<div class="step-action"><strong>Способ 2 (Claude Code напрямую):</strong> Extensions → Claude Code → открой меню</div>
+</div>
+<div class="cmd-block">
+<div class="cmd-label"><span>⌨️ Команда MCP</span><button class="prompt-copy" onclick="copyPrompt(this)">Скопировать</button></div>
+<div class="prompt-text">claude mcp add --transport http stitch https://mcp.stitch.withgoogle.com/mcp</div>
+</div>
+<div class="step-settings"><strong>⚙️</strong> Google даёт 15 бесплатных редизайнов в день</div>
+</div>
+
+<div class="step-card">
+<div class="step-num">07</div>
+<div class="step-title">Установка навыков (Skills) из GitHub</div>
+<div class="step-desc">Подтягиваем расширенные возможности для Stitch MCP из официального репозитория Google.</div>
+<div class="step-actions">
+<div class="step-action">Перейди на <a href="https://github.com/google-labs-code/stitch-skills" target="_blank" style="color:var(--accent2)">github.com/google-labs-code/stitch-skills</a></div>
+<div class="step-action">Скопируй ссылку на репозиторий</div>
+<div class="step-action">Вернись в AntiGravity</div>
+</div>
+<div class="prompt-block">
+<div class="prompt-label"><span>💬 Промпт 5 - Установка навыков</span><button class="prompt-copy" onclick="copyPrompt(this)">Скопировать</button></div>
+<div class="prompt-text">Добавь эти навыки в мою конфигурацию: https://github.com/google-labs-code/stitch-skills</div>
+</div>
+</div>
+
+<div class="step-card">
+<div class="step-num">08</div>
+<div class="step-title">Подключение GitHub MCP</div>
+<div class="step-desc">Нужен для публикации кода и деплоя. Подключается через токен.</div>
+<div class="step-actions">
+<div class="step-action">В AntiGravity: три точки → GitHub → Install</div>
+<div class="step-action">GitHub → Settings → Developer settings → Personal access tokens → Token classic</div>
+<div class="step-action">Нажми Generate new token (classic)</div>
+<div class="step-action">Поставь все галочки → Generate → скопируй токен</div>
+<div class="step-action">Вставь токен в AntiGravity</div>
+<div class="step-action">Manage MCP Server → обнови → должно появиться 26 функций</div>
+</div>
+</div>
+
+<div class="step-card">
+<div class="step-num">09</div>
+<div class="step-title">Проверка связи Stitch + Claude Code</div>
+<div class="step-desc">Проверяем, что Claude видит наши дизайны из Stitch.</div>
+<div class="prompt-block">
+<div class="prompt-label"><span>💬 Промпт 6 - Проверка</span><button class="prompt-copy" onclick="copyPrompt(this)">Скопировать</button></div>
+<div class="prompt-text">Какой последний дизайн я создал в Stitch?</div>
+</div>
+<div class="step-tip">Если Claude правильно назовёт ваш последний проект (название, стиль, цвета) - система полностью синхронизирована.</div>
+</div>
+
+<div class="step-card">
+<div class="step-num">10</div>
+<div class="step-title">Создание design.md</div>
+<div class="step-desc">Design.md - это системный чертёж дизайна. По нему Claude Code будет генерировать все новые страницы в едином фирменном стиле: цвета, шрифты, отступы, компоненты.</div>
+<div class="step-actions">
+<div class="step-action">Доведи свой лендинг в Stitch до идеала (правки, аннотации, комментарии)</div>
+<div class="step-action">Перейди в Claude Code / AntiGravity</div>
+<div class="step-action">Прикрепи название проекта и скриншот</div>
+</div>
+<div class="prompt-block">
+<div class="prompt-label"><span>💬 Промпт 7 - Создание design.md</span><button class="prompt-copy" onclick="copyPrompt(this)">Скопировать</button></div>
+<div class="prompt-text">Создай для меня файл design.md на основе этого проекта в Stitch</div>
+</div>
+<div class="step-tip">Claude через MCP стучится в Stitch, находит экраны и вытягивает всю внутрянку - HTML структуру, параметры дизайна, цвета, отступы.</div>
+</div>
+
+<div class="step-card">
+<div class="step-num">11</div>
+<div class="step-title">Генерация новых страниц по design.md</div>
+<div class="step-desc">Теперь можно штамповать страницы в едином стиле. Claude сам обращается к Stitch через MCP, генерирует визуал и превращает его в код.</div>
+<div class="step-actions">
+<div class="step-action">Переключись на модель Gemini 3.1 Pro</div>
+<div class="step-action">Введи промпт с описанием новой страницы</div>
+</div>
+<div class="prompt-block">
+<div class="prompt-label"><span>💬 Промпт 8 - Новая страница + смена стиля</span><button class="prompt-copy" onclick="copyPrompt(this)">Скопировать</button></div>
+<div class="prompt-text">Перегенерируй все изображения на этом сайте в стиле студии Гибли. Добавь на страницу раздел с тарифными планами и покажи, как все это будет выглядеть. Включай режим планирования и выложи на локальный сервер.</div>
+</div>
+<div class="prompt-block">
+<div class="prompt-label"><span>💬 Промпт 9 - Новый проект в том же стиле</span><button class="prompt-copy" onclick="copyPrompt(this)">Скопировать</button></div>
+<div class="prompt-text">Сделай новый проект для SaaS компании, которая продает VPN подписки</div>
+</div>
+<div class="step-tip">Agent Manager в AntiGravity позволяет вести десятки чатов одновременно и управлять несколькими проектами параллельно.</div>
+</div>
+
+<div class="step-card">
+<div class="step-num">12</div>
+<div class="step-title">Деплой на GitHub + Vercel</div>
+<div class="step-desc">Публикуем сайт в интернет прямо из чата. GitHub MCP уже подключён, осталось добавить Vercel.</div>
+<div class="step-actions">
+<div class="step-action">Добавь Vercel MCP - вставь конфиг ниже в чат AntiGravity</div>
+<div class="step-action">Получи Vercel токен: <a href="https://vercel.com/account/settings/tokens" target="_blank" style="color:var(--accent2)">vercel.com/account/settings/tokens</a></div>
+<div class="step-action">Замени ВСТАВЬ_СЮДА_СВОЙ_ТОКЕН на свой токен</div>
+<div class="step-action">Дай команду на деплой</div>
+</div>
+<div class="cmd-block">
+<div class="cmd-label"><span>⌨️ Конфиг Vercel MCP</span><button class="prompt-copy" onclick="copyPrompt(this)">Скопировать</button></div>
+<div class="prompt-text">"vercel": {
+  "command": "npx",
+  "args": ["-y", "vercel-mcp", "VERCEL_API_KEY=ВСТАВЬ_СЮДА_СВОЙ_ТОКЕН"],
+  "env": {},
+  "disabled": false
+}</div>
+</div>
+<div class="prompt-block">
+<div class="prompt-label"><span>💬 Промпт 10 - Деплой</span><button class="prompt-copy" onclick="copyPrompt(this)">Скопировать</button></div>
+<div class="prompt-text">Опубликуй это на GitHub и Vercel</div>
+</div>
+</div>
+
+</section>
+
+<div class="divider"></div>
+
+<section class="section" id="links">
+<div class="section-title">🔗 Все ссылки</div>
+<div class="links-grid">
+<a href="https://stitch.withgoogle.com" target="_blank" class="link-card">
+<span class="link-icon">✨</span>
+<div class="link-info"><div class="link-name">Stitch</div><div class="link-url">stitch.withgoogle.com</div></div>
+</a>
+<a href="https://stitch.withgoogle.com/settings" target="_blank" class="link-card">
+<span class="link-icon">🔑</span>
+<div class="link-info"><div class="link-name">Stitch API ключ</div><div class="link-url">stitch.withgoogle.com/settings</div></div>
+</a>
+<a href="https://antigravity.google/" target="_blank" class="link-card">
+<span class="link-icon">🚀</span>
+<div class="link-info"><div class="link-name">AntiGravity</div><div class="link-url">antigravity.google</div></div>
+</a>
+<a href="https://github.com/google-labs-code/stitch-skills" target="_blank" class="link-card">
+<span class="link-icon">📦</span>
+<div class="link-info"><div class="link-name">Stitch Skills (GitHub)</div><div class="link-url">github.com/google-labs-code/stitch-skills</div></div>
+</a>
+<a href="https://github.com" target="_blank" class="link-card">
+<span class="link-icon">🐙</span>
+<div class="link-info"><div class="link-name">GitHub</div><div class="link-url">github.com</div></div>
+</a>
+<a href="https://vercel.com" target="_blank" class="link-card">
+<span class="link-icon">▲</span>
+<div class="link-info"><div class="link-name">Vercel</div><div class="link-url">vercel.com</div></div>
+</a>
+<a href="https://vercel.com/account/settings/tokens" target="_blank" class="link-card">
+<span class="link-icon">🔑</span>
+<div class="link-info"><div class="link-name">Vercel API Token</div><div class="link-url">vercel.com/account/settings/tokens</div></div>
+</a>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section class="cta-section">
+<div class="cta-card">
+<div class="cta-text">Пошаговый план по&nbsp;выходу<br>на&nbsp;первые <span>100к в&nbsp;ИИ</span> в&nbsp;2026</div>
+<a href="https://t.me/mastodont_aibot?start=agency" target="_blank" class="cta-btn">ЗАБРАТЬ</a>
+</div>
+</section>
+
+<footer class="footer">
+<div class="footer-brand">МАСТОДОНТ</div>
+<div class="footer-sub">AI и нейросети - просто, по делу</div>
+<button class="footer-yt" onclick="navigator.clipboard.writeText('ИИ МАСТОДОНТ');this.querySelector('span').textContent='Скопировано!';setTimeout(()=>this.querySelector('span').textContent='ИИ МАСТОДОНТ',2000)">
+<svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.9 31.9 0 0 0 0 12a31.9 31.9 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.9 31.9 0 0 0 24 12a31.9 31.9 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12z"/></svg>
+<span>ИИ МАСТОДОНТ</span>
+</button>
+</footer>
+
+<script>
+function copyPrompt(btn){
+  const text=btn.closest('.prompt-block,.cmd-block').querySelector('.prompt-text').textContent.trim();
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='✓ Скопировано!';
+    btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Скопировать';btn.classList.remove('copied')},2000);
+  });
+}
+</script>
+</body>
+</html>
